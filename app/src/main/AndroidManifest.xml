@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LocationSharingApp1">
         <activity
+            android:name=".welcome.FriendListActivity"
+            android:exported="false" />
+        <activity
             android:name=".auth.SignUpActivity"
             android:exported="false" />
         <activity
