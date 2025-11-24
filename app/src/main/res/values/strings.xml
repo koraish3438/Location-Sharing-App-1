@@ -10,5 +10,6 @@
     <string name="hint_password">••••••••</string>
 
     <string name="button_sign_up">Sign up</string>
+    <string name="title_activity_maps">MapsActivity</string>
 
 </resources>
