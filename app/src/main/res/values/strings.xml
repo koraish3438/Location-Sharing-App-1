@@ -1,3 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Location Sharing App 1</string>
+    <string name="app_name">Location Sharing App</string>
+
+    <string name="screen_title">Sign up</string>
+
+    <string name="label_name">Name</string>
+    <string name="label_email">Email</string>
+    <string name="label_password">Password</string>
+    <string name="hint_password">••••••••</string>
+
+    <string name="button_sign_up">Sign up</string>
+
 </resources>
