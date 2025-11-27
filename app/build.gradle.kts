@@ -54,7 +54,6 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
     implementation(libs.firebase.firestore)
-    implementation(libs.firebase.firestore.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -71,7 +70,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.9.6")
     implementation("androidx.navigation:navigation-ui-ktx:2.9.6")
 
-    // Google Play Services (Location)
+    // Location
     implementation("com.google.android.gms:play-services-location:21.3.0")
 
     // Google Maps
@@ -82,5 +81,9 @@ dependencies {
 
     // PermissionX (Optional)
     implementation("com.guolindev.permissionx:permissionx:1.7.1")
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 
 }
