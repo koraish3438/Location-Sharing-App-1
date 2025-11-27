@@ -1,7 +1,9 @@
 package com.example.locationsharingapp1.viewModel
 
+import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
+import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.AndroidViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -15,24 +17,9 @@ class LocationViewModel(application: Application): AndroidViewModel(application)
         fusedLocationClient = client
     }
 
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     fun getLastLocation(callback: (String) -> Unit) {
-        val context = getApplication<Application>()
 
-        // Check permission first
-        val hasFine = ActivityCompat.checkSelfPermission(
-            context,
-            android.Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-
-        val hasCoarse = ActivityCompat.checkSelfPermission(
-            context,
-            android.Manifest.permission.ACCESS_COARSE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-
-        if (!hasFine && !hasCoarse) {
-            callback("Permission not granted")
-            return
-        }
 
         fusedLocationClient?.lastLocation
             ?.addOnCompleteListener(OnCompleteListener { task ->
