@@ -2,25 +2,29 @@ package com.example.locationsharingapp1.map
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.example.locationsharingapp1.R
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.example.locationsharingapp1.databinding.ActivityMapsBinding
+import com.example.locationsharingapp1.viewModel.FireStoreViewModel
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.example.locationsharingapp1.databinding.ActivityMapsBinding
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private lateinit var mMap: GoogleMap
+    private lateinit var googleMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+    private lateinit var fireStoreViewModel: FireStoreViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        fireStoreViewModel = ViewModelProvider(this)[FireStoreViewModel::class.java]
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -37,12 +41,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
+    override fun onMapReady(map: GoogleMap) {
+        googleMap = map
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        fireStoreViewModel.getAllUser { userList ->
+            for(user in userList) {
+                val userLocation = user.location
+                if(userLocation.isNotEmpty()) {
+                    val latLng = parseLocation(userLocation)
+                    val markerOption = MarkerOptions().position(latLng).title("${user.displayName}\n${user.email}")
+                    googleMap.addMarker(markerOption)
+                }
+            }
+        }
     }
+
+    private fun parseLocation(location: String): LatLng {
+        val latLngSplit = location.split(",")
+        val latitude = latLngSplit[0].substringAfter("Lat: ").toDouble()
+        val logitude = latLngSplit[1].substringAfter("Long: ").toDouble()
+
+        return LatLng(latitude, logitude)
+    }
+
 }

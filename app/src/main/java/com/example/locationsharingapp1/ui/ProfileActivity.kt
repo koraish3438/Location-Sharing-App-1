@@ -4,12 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
-import com.example.locationsharingapp1.R
 import com.example.locationsharingapp1.auth.SignInActivity
 import com.example.locationsharingapp1.databinding.ActivityProfileBinding
 import com.example.locationsharingapp1.viewModel.AuthenticationViewModel
@@ -39,8 +35,8 @@ class ProfileActivity : AppCompatActivity() {
         // Update button
         binding.btnUpdateProfile.setOnClickListener {
             val newName = binding.etProfileName.text.toString()
-            val newLocation = binding.etProfileLocation.text.toString()
-            updateProfile(newName, newLocation)
+            val newEmail = binding.etProfileEmail.text.toString()
+            updateProfile(newName, newEmail)
         }
 
         // Home & Logout
@@ -58,12 +54,11 @@ class ProfileActivity : AppCompatActivity() {
         loadUserInfo()
     }
 
-    private fun updateProfile(newName: String, newLocation: String) {
+    private fun updateProfile(newName: String, newEmail: String) {
         val currentUser = authViewModel.getCurrentUser()
         if(currentUser != null) {
             val userId = currentUser.uid
-            val email = binding.etProfileEmail.text.toString()
-            fireStoreViewModel.updateUser(userId, newName, email, newLocation)
+            fireStoreViewModel.updateUser(userId, newName, newEmail, null)
             Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show()
             finish()
         } else {

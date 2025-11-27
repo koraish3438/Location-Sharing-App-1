@@ -40,7 +40,7 @@ class FireStoreViewModel: ViewModel() {
             }
     }
 
-    fun updateUser(userId: String,displayName: String, email: String, location: String) {
+    fun updateUser(userId: String,displayName: String, email: String, location: String?) {
         val user = hashMapOf(
             "displayName" to displayName,
             "location" to location

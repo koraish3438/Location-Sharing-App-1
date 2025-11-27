@@ -17,20 +17,37 @@ class LocationViewModel(application: Application): AndroidViewModel(application)
         fusedLocationClient = client
     }
 
-    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     fun getLastLocation(callback: (String) -> Unit) {
-
-
-        fusedLocationClient?.lastLocation
-            ?.addOnCompleteListener(OnCompleteListener { task ->
-                if (task.isSuccessful && task.result != null) {
-                    val lastLocation = task.result
-                    val latitude = lastLocation.latitude
-                    val longitude = lastLocation.longitude
-                    callback("Lat: $latitude, Long: $longitude")
-                } else {
-                    callback("Location not available")
+        try {
+            fusedLocationClient?.let { client ->
+                val context = getApplication<Application>().applicationContext
+                if (ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    callback("Location permission not granted")
+                    return
                 }
-            })
+
+                client.lastLocation.addOnCompleteListener { task ->
+                    if (task.isSuccessful && task.result != null) {
+                        val lastLocation = task.result
+                        val latitude = lastLocation.latitude
+                        val longitude = lastLocation.longitude
+                        callback("Lat: $latitude, Long: $longitude")
+                    } else {
+                        callback("Location not available")
+                    }
+                }
+            } ?: callback("Location client not initialized")
+        } catch (e: SecurityException) {
+            callback("Location access denied: ${e.message}")
+        }
     }
+
 }
